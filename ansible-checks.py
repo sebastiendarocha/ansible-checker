@@ -23,7 +23,8 @@ with open("ansible-checks.yml", 'r') as stream:
                     playbook, '--flush-cache', "--check"
                 ],
                 env=env,
-                stdout=PIPE
+                stdout=PIPE,
+                stderr=PIPE
             )
             json_output, _ = proc.communicate()
             status = json.loads(json_output.decode())["stats"]
