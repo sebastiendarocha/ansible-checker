@@ -1,6 +1,8 @@
 # ansible-checker
 A script to check if all playbooks would run OK
 
+[![Build Status](https://travis-ci.org/sebastiendarocha/ansible-checker.svg?branch=master)](https://travis-ci.org/sebastiendarocha/ansible-checker)
+
 ## Install
 
 * Copy the files in your ansible.cfg directory (i.e. /etc/ansible/)
@@ -12,4 +14,4 @@ A script to check if all playbooks would run OK
 
 ## Compatibility
 
-Tested with Ansible 2.3.2 and Python 3.4
+Tested with Ansible 2.3.2 and Python 3.4, 3.5 and 3.6
