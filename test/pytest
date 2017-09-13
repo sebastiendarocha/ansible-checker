@@ -1,0 +1,21 @@
+#! /usr/bin/python3
+
+import unittest
+import os
+import subprocess
+
+
+class TestAnsibleCheckRun(unittest.TestCase):
+    def setup(self):
+        os.unlink("ansible-checks.yml")
+
+    def testErrorConfAbsent(self):
+        with self.assertRaises(subprocess.CalledProcessError) as context:
+            subprocess.check_output('../ansible-checks.py',
+                                    stderr=subprocess.STDOUT)
+
+        self.assertTrue("returned non-zero exit status 1"
+                        in str(context.exception))
+
+if __name__ == '__main__':
+    unittest.main()
