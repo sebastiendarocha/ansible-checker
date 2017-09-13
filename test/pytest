@@ -3,11 +3,19 @@
 import unittest
 import os
 import subprocess
+import yaml
 
 
 class TestAnsibleCheckRun(unittest.TestCase):
-    def setup(self):
-        os.unlink("ansible-checks.yml")
+    def setUp(self):
+        try:
+            os.remove("ansible-checks.yml")
+        except OSError:
+            pass
+
+    def createConf(self, config):
+        with open('ansible-checks.yml', 'w') as yaml_file:
+                yaml.dump(config, yaml_file, default_flow_style=False)
 
     def testErrorConfAbsent(self):
         with self.assertRaises(subprocess.CalledProcessError) as context:
@@ -16,6 +24,18 @@ class TestAnsibleCheckRun(unittest.TestCase):
 
         self.assertTrue("returned non-zero exit status 1"
                         in str(context.exception))
+
+    def testConfSimplePlaybook(self):
+        conf = [
+            dict(environment="hosts",
+                 playbooks=["simple.yml"])
+        ]
+        self.createConf(conf)
+
+        output = subprocess.check_output('../ansible-checks.py',
+                                         stderr=subprocess.STDOUT)
+
+        self.assertEqual("hosts : simple.yml\n", output.decode())
 
 if __name__ == '__main__':
     unittest.main()
