@@ -1,0 +1,9 @@
+---
+- environment: environment/test/
+  playbooks:
+    - common.yml
+    - django.yml
+- environment: environment/prod/
+  playbooks:
+    - common.yml
+    - django.yml
