@@ -102,3 +102,7 @@ ENV/
 
 # vim
 *.swp
+
+# test artefact
+test/ansible-checks.yml
+
