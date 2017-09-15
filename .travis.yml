@@ -13,5 +13,5 @@ install:
 before_script:
   - pip freeze
 script:
-  - ./pytest
+  - python pytest
 
