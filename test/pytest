@@ -116,5 +116,19 @@ class TestAnsibleCheckRun(unittest.TestCase):
                          "    localhost : errors: 1\n",
                          output.decode())
 
+    def testConfAllInOnePlaybook(self):
+        conf = [
+            dict(environment="hosts",
+                 playbooks=["allinone.yml"])
+        ]
+        createConf(conf)
+
+        output = subprocess.check_output('../ansible-checks.py',
+                                         stderr=subprocess.STDOUT)
+
+        self.assertEqual("hosts : allinone.yml\n"
+                         "    localhost : errors: 1, changes: 1\n",
+                         output.decode())
+
 if __name__ == '__main__':
     unittest.main()

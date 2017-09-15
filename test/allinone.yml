@@ -1,0 +1,13 @@
+---
+- hosts: all
+  tasks:
+    - name: this will report OK
+      setup:
+
+    - name: this will report change
+      setup:
+      changed_when: true
+
+    - name: this will report error
+      setup:
+      failed_when: true
