@@ -5,6 +5,7 @@ import yaml
 import os
 import logging
 import argparse
+import sys
 
 # Parse command line arguments
 parser = argparse.ArgumentParser(
@@ -24,6 +25,7 @@ if args.loglevel is not None:
 env = os.environ.copy()
 env['ANSIBLE_STDOUT_CALLBACK'] = 'json'
 
+
 with open("ansible-checks.yml", 'r') as stream:
     data = yaml.load(stream)
 
@@ -31,7 +33,15 @@ with open("ansible-checks.yml", 'r') as stream:
         environment = inventory["environment"]
         playbooks = inventory["playbooks"]
 
+        if not os.path.exists(environment):
+            logging.error("Path doesn't exists: %s" % environment)
+            sys.exit(2)
+
         for playbook in playbooks:
+            if not os.path.exists(playbook):
+                logging.error("Playbook doesn't exists: %s" % playbook)
+                sys.exit(3)
+
             print("%s : %s" % (environment, playbook))
             proc = Popen(
                 [
