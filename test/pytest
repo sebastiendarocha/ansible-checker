@@ -15,19 +15,18 @@ def createConf(config):
 class TestAnsibleCheckArgs(unittest.TestCase):
     """ test the command line interface """
 
-    def testNoArguments(self):
+    def setUp(self):
         conf = [
         ]
         createConf(conf)
+
+    def testNoArguments(self):
         output = subprocess.check_output('../ansible-checks.py',
                                          stderr=subprocess.STDOUT)
 
         self.assertEqual("", output.decode())
 
     def testHelpArguments(self):
-        conf = [
-        ]
-        createConf(conf)
         output = subprocess.check_output(
             [
                 '../ansible-checks.py',
@@ -39,9 +38,6 @@ class TestAnsibleCheckArgs(unittest.TestCase):
                       output.decode())
 
     def testLoglevelArguments(self):
-        conf = [
-        ]
-        createConf(conf)
         output = subprocess.check_output(
             [
                 '../ansible-checks.py',
@@ -53,9 +49,6 @@ class TestAnsibleCheckArgs(unittest.TestCase):
         self.assertEqual("", output.decode())
 
     def testWrongLoglevelArgument(self):
-        conf = [
-        ]
-        createConf(conf)
         with self.assertRaises(subprocess.CalledProcessError) as context:
             subprocess.check_output(
                 [
@@ -93,7 +86,9 @@ class TestAnsibleCheckRun(unittest.TestCase):
         output = subprocess.check_output('../ansible-checks.py',
                                          stderr=subprocess.STDOUT)
 
-        self.assertEqual("hosts : changed.yml\n    localhost : changes: 1\n", output.decode())
+        self.assertEqual("hosts : changed.yml\n"
+                         "    localhost : changes: 1\n",
+                         output.decode())
 
     def testConfSimplePlaybook(self):
         conf = [
