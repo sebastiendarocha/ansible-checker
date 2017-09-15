@@ -11,6 +11,17 @@ A script to check if all playbooks would run OK
 * Fill your ansible.yml setup file
 * Call the script and it will call all the playbooks in the specified environments.
 
+## Command Line Arguments
+
+```
+usage: ansible-checks.py [-h] [--log [LOGLEVEL]]
+
+Check ansible playbook plays on several inventories
+
+optional arguments:
+  -h, --help        show this help message and exit
+  --log [LOGLEVEL]
+```
 
 ## Compatibility
 

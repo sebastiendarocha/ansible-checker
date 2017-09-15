@@ -6,16 +6,74 @@ import subprocess
 import yaml
 
 
+def createConf(config):
+    """ Fill the yaml configuration file """
+    with open('ansible-checks.yml', 'w') as yaml_file:
+        yaml.dump(config, yaml_file, default_flow_style=False)
+
+
+class TestAnsibleCheckArgs(unittest.TestCase):
+    """ test the command line interface """
+
+    def testNoArguments(self):
+        conf = [
+        ]
+        createConf(conf)
+        output = subprocess.check_output('../ansible-checks.py',
+                                         stderr=subprocess.STDOUT)
+
+        self.assertEqual("", output.decode())
+
+    def testHelpArguments(self):
+        conf = [
+        ]
+        createConf(conf)
+        output = subprocess.check_output(
+            [
+                '../ansible-checks.py',
+                '-h'
+            ],
+            stderr=subprocess.STDOUT)
+
+        self.assertIn("Check ansible playbook plays on several inventories",
+                      output.decode())
+
+    def testLoglevelArguments(self):
+        conf = [
+        ]
+        createConf(conf)
+        output = subprocess.check_output(
+            [
+                '../ansible-checks.py',
+                '--log',
+                'DEBUG'
+            ],
+            stderr=subprocess.STDOUT)
+
+        self.assertEqual("", output.decode())
+
+    def testWrongLoglevelArgument(self):
+        conf = [
+        ]
+        createConf(conf)
+        with self.assertRaises(subprocess.CalledProcessError) as context:
+            subprocess.check_output(
+                [
+                    '../ansible-checks.py',
+                    '--log',
+                    'DEBUGFAIL'
+                ],
+                stderr=subprocess.STDOUT)
+
+        self.assertIn("Invalid log level: ", str(context.exception.output))
+
+
 class TestAnsibleCheckRun(unittest.TestCase):
     def setUp(self):
         try:
             os.remove("ansible-checks.yml")
         except OSError:
             pass
-
-    def createConf(self, config):
-        with open('ansible-checks.yml', 'w') as yaml_file:
-                yaml.dump(config, yaml_file, default_flow_style=False)
 
     def testErrorConfAbsent(self):
         with self.assertRaises(subprocess.CalledProcessError) as context:
@@ -25,12 +83,24 @@ class TestAnsibleCheckRun(unittest.TestCase):
         self.assertTrue("returned non-zero exit status 1"
                         in str(context.exception))
 
+    def testConfChandedPlaybook(self):
+        conf = [
+            dict(environment="hosts",
+                 playbooks=["changed.yml"])
+        ]
+        createConf(conf)
+
+        output = subprocess.check_output('../ansible-checks.py',
+                                         stderr=subprocess.STDOUT)
+
+        self.assertEqual("hosts : changed.yml\n    localhost : changes: 1\n", output.decode())
+
     def testConfSimplePlaybook(self):
         conf = [
             dict(environment="hosts",
                  playbooks=["simple.yml"])
         ]
-        self.createConf(conf)
+        createConf(conf)
 
         output = subprocess.check_output('../ansible-checks.py',
                                          stderr=subprocess.STDOUT)
