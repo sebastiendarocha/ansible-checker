@@ -102,5 +102,19 @@ class TestAnsibleCheckRun(unittest.TestCase):
 
         self.assertEqual("hosts : simple.yml\n", output.decode())
 
+    def testConfErrorPlaybook(self):
+        conf = [
+            dict(environment="hosts",
+                 playbooks=["error.yml"])
+        ]
+        createConf(conf)
+
+        output = subprocess.check_output('../ansible-checks.py',
+                                         stderr=subprocess.STDOUT)
+
+        self.assertEqual("hosts : error.yml\n"
+                         "    localhost : errors: 1\n",
+                         output.decode())
+
 if __name__ == '__main__':
     unittest.main()
