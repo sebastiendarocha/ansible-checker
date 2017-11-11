@@ -10,8 +10,9 @@ before_install:
   - cd test
 install: 
   - pip install -r ../requirements.txt
+  - pip install pytest
 before_script:
   - pip freeze
 script:
-  - python pytest
+  - pytest
 
