@@ -4,21 +4,23 @@ import unittest
 import os
 import subprocess
 import yaml
-
-def createConf(config):
-    """ Fill the yaml configuration file """
-    with open('ansible-checks.yml', 'w') as yaml_file:
-        yaml.dump(config, yaml_file, default_flow_style=False)
+import utils
 
 
 class TestAnsibleCheckRun(unittest.TestCase):
-    def setUp(self):
+    def setup_method(self, method):
+        try:
+            os.remove("ansible-checks.yml")
+        except OSError:
+            pass
+        utils.install_config_test_file(method.__name__)
+
+    def testErrorConfAbsent(self):
         try:
             os.remove("ansible-checks.yml")
         except OSError:
             pass
 
-    def testErrorConfAbsent(self):
         with self.assertRaises(subprocess.CalledProcessError) as context:
             subprocess.check_output('../ansible-checks.py',
                                     stderr=subprocess.STDOUT)
@@ -27,11 +29,6 @@ class TestAnsibleCheckRun(unittest.TestCase):
                         in str(context.exception))
 
     def testErrorInventory(self):
-        conf = [
-            dict(environment="hosts_fail",
-                 playbooks=["changed.yml"])
-        ]
-        createConf(conf)
 
         with self.assertRaises(subprocess.CalledProcessError) as context:
             subprocess.check_output('../ansible-checks.py',
@@ -43,11 +40,6 @@ class TestAnsibleCheckRun(unittest.TestCase):
                       str(context.exception.output.decode()))
 
     def testErrorPlaybook(self):
-        conf = [
-            dict(environment="hosts",
-                 playbooks=["not_exists.yml"])
-        ]
-        createConf(conf)
 
         with self.assertRaises(subprocess.CalledProcessError) as context:
             subprocess.check_output('../ansible-checks.py',
@@ -59,11 +51,6 @@ class TestAnsibleCheckRun(unittest.TestCase):
                       str(context.exception.output))
 
     def testConfChandedPlaybook(self):
-        conf = [
-            dict(environment="hosts",
-                 playbooks=["changed.yml"])
-        ]
-        createConf(conf)
 
         output = subprocess.check_output('../ansible-checks.py',
                                          stderr=subprocess.STDOUT)
@@ -73,11 +60,6 @@ class TestAnsibleCheckRun(unittest.TestCase):
                          output.decode())
 
     def testConfSimplePlaybook(self):
-        conf = [
-            dict(environment="hosts",
-                 playbooks=["simple.yml"])
-        ]
-        createConf(conf)
 
         output = subprocess.check_output('../ansible-checks.py',
                                          stderr=subprocess.STDOUT)
@@ -85,11 +67,6 @@ class TestAnsibleCheckRun(unittest.TestCase):
         self.assertEqual("hosts : simple.yml\n", output.decode())
 
     def testConfErrorPlaybook(self):
-        conf = [
-            dict(environment="hosts",
-                 playbooks=["error.yml"])
-        ]
-        createConf(conf)
 
         output = subprocess.check_output('../ansible-checks.py',
                                          stderr=subprocess.STDOUT)
@@ -99,14 +76,6 @@ class TestAnsibleCheckRun(unittest.TestCase):
                          output.decode())
 
     def testConfTwoPlaybooks(self):
-        conf = [
-            dict(environment="hosts",
-                 playbooks=[
-                     "allinone.yml",
-                     "simple.yml",
-                 ])
-        ]
-        createConf(conf)
 
         output = subprocess.check_output('../ansible-checks.py',
                                          stderr=subprocess.STDOUT)

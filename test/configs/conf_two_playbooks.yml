@@ -1,0 +1,6 @@
+---
+environments:
+- environment: hosts
+  playbooks:
+  - allinone.yml
+  - simple.yml

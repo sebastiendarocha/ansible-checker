@@ -5,25 +5,17 @@ import shutil
 import os
 import subprocess
 import yaml
-
-def createConf(config):
-    """ Fill the yaml configuration file """
-    with open('ansible-checks.yml', 'w') as yaml_file:
-        yaml.dump(config, yaml_file, default_flow_style=False)
-
-def installConf(filename):
-    shutil.copy(filename,"ansible-checks.yml")
-
+import utils
 
 class TestAnsibleCheckYamlOutput(unittest.TestCase):
-    def setUp(self):
+    def setup_method(self, method):
         try:
             os.remove("ansible-checks.yml")
         except OSError:
             pass
+        utils.install_config_test_file(method.__name__)
 
-    def testConfChandedPlaybook(self):
-        installConf("configs/changed_playbook.yml")
+    def testConfChangedPlaybookYaml(self):
 
         output = subprocess.check_output('../ansible-checks.py',
                                          stderr=subprocess.STDOUT)

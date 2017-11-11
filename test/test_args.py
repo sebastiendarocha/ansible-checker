@@ -3,21 +3,17 @@
 import unittest
 import os
 import subprocess
-import yaml
-
-def createConf(config):
-    """ Fill the yaml configuration file """
-    with open('ansible-checks.yml', 'w') as yaml_file:
-        yaml.dump(config, yaml_file, default_flow_style=False)
+import utils
 
 
 class TestAnsibleCheckArgs(unittest.TestCase):
     """ test the command line interface """
 
     def setUp(self):
-        conf = [
-        ]
-        createConf(conf)
+        conf = dict(
+            environment= []
+        )
+        utils.createConf(conf)
 
     def testNoArguments(self):
         output = subprocess.check_output('../ansible-checks.py',

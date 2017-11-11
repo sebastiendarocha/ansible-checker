@@ -1,0 +1,5 @@
+---
+environments:
+- environment: hosts
+  playbooks:
+  - simple.yml

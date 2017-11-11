@@ -1,0 +1,5 @@
+---
+environments:
+- environment: hosts_fail
+  playbooks:
+  - changed.yml
