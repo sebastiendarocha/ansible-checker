@@ -1,0 +1,6 @@
+---
+output: yaml
+environments:
+- environment: hosts
+  playbooks:
+  - changed.yml

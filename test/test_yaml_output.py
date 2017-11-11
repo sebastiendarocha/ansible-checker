@@ -1,6 +1,7 @@
 #! /usr/bin/env python3
 
 import unittest
+import shutil
 import os
 import subprocess
 import yaml
@@ -9,6 +10,9 @@ def createConf(config):
     """ Fill the yaml configuration file """
     with open('ansible-checks.yml', 'w') as yaml_file:
         yaml.dump(config, yaml_file, default_flow_style=False)
+
+def installConf(filename):
+    shutil.copy(filename,"ansible-checks.yml")
 
 
 class TestAnsibleCheckYamlOutput(unittest.TestCase):
@@ -19,32 +23,11 @@ class TestAnsibleCheckYamlOutput(unittest.TestCase):
             pass
 
     def testConfChandedPlaybook(self):
-        conf = dict(
-            output='yaml',
-            environments=
-            [
-                dict(
-                    environment="hosts",
-                    playbooks=["changed.yml"],
-                    )
-            ]
-        )
-
-        createConf(conf)
+        installConf("configs/changed_playbook.yml")
 
         output = subprocess.check_output('../ansible-checks.py',
                                          stderr=subprocess.STDOUT)
 
-        self.assertEqual(
-            "environments:\n"
-            "- name: hosts\n"
-            "  playbooks:\n"
-            "  - hosts:\n"
-            "    - changes: 1\n"
-            "      errors: 0\n"
-            "      name: localhost\n"
-            "      success: 1\n"
-            "    name: changed.yml\n"
-            "\n",
-            output.decode())
+        with open("expect_results/yaml_output_changed_playbook.yml") as f:
+            self.assertEqual(f.read(), output.decode())
 
