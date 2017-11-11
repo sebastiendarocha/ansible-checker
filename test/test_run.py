@@ -115,6 +115,3 @@ class TestAnsibleCheckRun(unittest.TestCase):
                          "    localhost : errors: 1, changes: 1\n"
                          "hosts : simple.yml\n",
                          output.decode())
-
-if __name__ == '__main__':
-    unittest.main()
