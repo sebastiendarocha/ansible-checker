@@ -43,29 +43,36 @@ with open("ansible-checks.yml", 'r') as stream:
                 sys.exit(3)
 
             print("%s : %s" % (environment, playbook))
-            proc = Popen(
-                [
-                    "ansible-playbook", "-i", environment,
-                    playbook, '--flush-cache', "--check"
-                ],
-                env=env,
-                stdout=PIPE,
-                stderr=PIPE
-            )
-            json_output, _ = proc.communicate()
-            logging.debug(json_output)
-            status = json.loads(json_output.decode())["stats"]
+            command = [
+                        "ansible-playbook", "-i", environment,
+                        playbook, "--check",
+                        # '--flush-cache', # Bug in Ansible 2.4.0
+                    ]
+            try:
+                proc = Popen(
+                    command,
+                    env=env,
+                    stdout=PIPE,
+                    stderr=PIPE
+                )
+                json_output, _ = proc.communicate()
+                logging.debug(json_output)
+                status = json.loads(json_output.decode())["stats"]
 
-            for host, values in status.items():
-                output = []
-                errors = values["unreachable"] + values["failures"]
-                changed = values["changed"]
+                for host, values in status.items():
+                    output = []
+                    errors = values["unreachable"] + values["failures"]
+                    changed = values["changed"]
 
-                if errors > 0:
-                    output.append("errors: %s" % errors)
+                    if errors > 0:
+                        output.append("errors: %s" % errors)
 
-                if changed > 0:
-                    output.append("changes: %s" % changed)
+                    if changed > 0:
+                        output.append("changes: %s" % changed)
 
-                if len(output) > 0:
-                    print("    %s : %s" % (host, ", ".join(output)))
+                    if len(output) > 0:
+                        print("    %s : %s" % (host, ", ".join(output)))
+
+            except Exception as e: 
+                print( "Error running command '%s'" % ' '.join(command))
+                print( "%s : %s " % (type(e),e))
