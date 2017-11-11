@@ -1,0 +1,7 @@
+---
+output: yaml
+environments:
+- environment: hosts
+  playbooks:
+  - not_exists.yml
+
