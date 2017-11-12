@@ -25,4 +25,4 @@ optional arguments:
 
 ## Compatibility
 
-Tested with Ansible 2.3.2 and Python 3.4, 3.5 and 3.6
+Tested with Ansible 2.4.1 and Python 3.4, 3.5 and 3.6
