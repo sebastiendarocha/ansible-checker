@@ -1,11 +1,10 @@
 #! /usr/bin/env python3
 
 import unittest
-import shutil
 import os
 import subprocess
-import yaml
 import utils
+
 
 class TestAnsibleCheckYamlOutput(unittest.TestCase):
     def setup_method(self, method):

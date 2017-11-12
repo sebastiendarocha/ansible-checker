@@ -1,7 +1,6 @@
 #! /usr/bin/env python3
 
 import unittest
-import os
 import subprocess
 import utils
 
@@ -11,7 +10,7 @@ class TestAnsibleCheckArgs(unittest.TestCase):
 
     def setUp(self):
         conf = dict(
-            environment= []
+            environment=[]
         )
         utils.createConf(conf)
 

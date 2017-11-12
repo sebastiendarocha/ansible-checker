@@ -3,7 +3,6 @@
 import unittest
 import os
 import subprocess
-import yaml
 import utils
 
 
