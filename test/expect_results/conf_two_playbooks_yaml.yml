@@ -5,12 +5,12 @@ environments:
     - changes: 1
       errors: 1
       name: localhost
-      success: 1
+      success: 3
     name: allinone.yml
   - hosts:
     - changes: 0
       errors: 0
       name: localhost
-      success: 0
+      success: 2
     name: simple.yml
 

@@ -5,6 +5,6 @@ environments:
     - changes: 0
       errors: 1
       name: localhost
-      success: 0
+      success: 1
     name: error.yml
 

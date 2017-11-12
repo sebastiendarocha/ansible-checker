@@ -27,8 +27,7 @@ def _parse_host(host, values):
 
     result_host['errors'] = errors
     result_host['changes'] = changed
-    # TODO Something wrong
-    result_host['success'] = changed
+    result_host['success'] = success
     return result_host
 
 
@@ -95,7 +94,8 @@ def _print_human_result(result):
 
 def main():
     """
-    Calls all playbook in their environments and print the sumary in yaml or human format
+    Calls all playbook in their environments and print the summary in yaml
+    or human format
     """
 
     # main
