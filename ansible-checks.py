@@ -35,11 +35,11 @@ with open("ansible-checks.yml", 'r') as stream:
     for inventory in environments:
         environment = inventory["environment"]
         playbooks = inventory["playbooks"]
-        result_environments = result.setdefault('environments',[])
-        result_environment = dict(name=environment)
-        result_environments.append(result_environment)
 
-        result_playbooks = result_environment.setdefault('playbooks',[])
+        result_environments = result.setdefault('environments', [])
+        result_environment = dict(name=environment)
+
+        result_playbooks = result_environment.setdefault('playbooks', [])
         if not os.path.exists(environment):
             logging.error("Path doesn't exists: %s" % environment)
             sys.exit(2)
@@ -49,12 +49,10 @@ with open("ansible-checks.yml", 'r') as stream:
                 logging.error("Playbook doesn't exists: %s" % playbook)
                 sys.exit(3)
 
-            if output_format is None:
-                print("%s : %s" % (environment, playbook))
-
             result_playbook = dict(name=playbook)
             result_playbooks.append(result_playbook)
-            result_hosts = result_playbook.setdefault('hosts',[])
+            result_hosts = result_playbook.setdefault('hosts', [])
+
             command = [
                         "ansible-playbook", "-i", environment,
                         playbook, "--check",
@@ -74,34 +72,47 @@ with open("ansible-checks.yml", 'r') as stream:
                 status = json.loads(json_output.decode())["stats"]
 
                 for host, values in status.items():
-                    output = []
+
+                    logging.debug(values)
+
                     errors = values["unreachable"] + values["failures"]
                     changed = values["changed"]
                     success = values["ok"]
 
                     result_host = dict(name=host)
-                    result_hosts.append(result_host)
 
-                    logging.debug(values)
                     result_host['errors'] = errors
                     result_host['changes'] = changed
+# TODO Something wrong
                     result_host['success'] = changed
 
-                    if errors > 0:
-                        output.append("errors: %s" % errors)
+                    result_hosts.append(result_host)
 
-                    if changed > 0:
-                        output.append("changes: %s" % changed)
+            except Exception as e:
+                print("Error running command '%s'" % ' '.join(command))
+                print("%s : %s " % (type(e), e))
 
-                    if len(output) > 0:
-                        if output_format is None:
-                            print("    %s : %s" %
-                                  (host, ", ".join(output))
-                                 )
-
-            except Exception as e: 
-                print( "Error running command '%s'" % ' '.join(command))
-                print( "%s : %s " % (type(e),e))
+        result_environments.append(result_environment)
 
     if output_format == "yaml":
+
         print(yaml.dump(result, default_flow_style=False))
+
+    elif output_format is None:
+
+        for environment in result.get("environments", []):
+            for playbook in environment['playbooks']:
+                print("%s : %s" % (environment['name'], playbook['name']))
+
+                for host in playbook['hosts']:
+                    output = []
+
+                    if host["errors"] > 0:
+                        output.append("errors: %s" % host["errors"])
+
+                    if host['changes'] > 0:
+                        output.append("changes: %s" % host["changes"])
+
+                    if len(output) > 0:
+                        print("    %s : %s" %
+                              (host['name'], ", ".join(output)))
