@@ -14,6 +14,10 @@ def get_config_test_file(test):
     test_base = test[4:]
     return "configs/%s.yml" % to_snake_case(test_base)
 
+def get_expected_test_file(test):
+    test_base = test[4:]
+    return "expect_results/%s.yml" % to_snake_case(test_base)
+
 def install_config_test_file(method):
     installConf(get_config_test_file(method))
 

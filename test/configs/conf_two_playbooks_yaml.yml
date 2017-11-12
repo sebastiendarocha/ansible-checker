@@ -1,0 +1,7 @@
+---
+output: yaml
+environments:
+- environment: hosts
+  playbooks:
+  - allinone.yml
+  - simple.yml

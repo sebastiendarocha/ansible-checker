@@ -1,0 +1,10 @@
+environments:
+- name: hosts
+  playbooks:
+  - hosts:
+    - changes: 0
+      errors: 0
+      name: localhost
+      success: 0
+    name: simple.yml
+

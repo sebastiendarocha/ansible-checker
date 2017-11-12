@@ -13,7 +13,17 @@ class TestAnsibleCheckYamlOutput(unittest.TestCase):
             os.remove("ansible-checks.yml")
         except OSError:
             pass
+
         utils.install_config_test_file(method.__name__)
+
+        if "expected_result" in self.__dict__:
+            del self.expected_result
+
+        try:
+            with open(utils.get_expected_test_file(method.__name__)) as f:
+                self.expected_result = f.read()
+        except OSError:
+            pass
 
     def testErrorConfAbsentYaml(self):
         try:
@@ -55,6 +65,25 @@ class TestAnsibleCheckYamlOutput(unittest.TestCase):
         output = subprocess.check_output('../ansible-checks.py',
                                          stderr=subprocess.STDOUT)
 
-        with open("expect_results/yaml_output_changed_playbook.yml") as f:
-            self.assertEqual(f.read(), output.decode())
+        self.assertEqual(self.expected_result, output.decode())
 
+    def testConfSimplePlaybookYaml(self):
+
+        output = subprocess.check_output('../ansible-checks.py',
+                                         stderr=subprocess.STDOUT)
+
+        self.assertEqual(self.expected_result, output.decode())
+
+    def testConfErrorPlaybookYaml(self):
+
+        output = subprocess.check_output('../ansible-checks.py',
+                                         stderr=subprocess.STDOUT)
+
+        self.assertEqual(self.expected_result, output.decode())
+
+    def testConfTwoPlaybooksYaml(self):
+
+        output = subprocess.check_output('../ansible-checks.py',
+                                         stderr=subprocess.STDOUT)
+
+        self.assertEqual(self.expected_result, output.decode())
