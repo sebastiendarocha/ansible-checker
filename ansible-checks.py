@@ -87,7 +87,7 @@ def _print_human_result(result):
                 if host['changes'] > 0:
                     output.append("changes: %s" % host["changes"])
 
-                if len(output) > 0:
+                if output:
                     print("    %s : %s" %
                           (host['name'], ", ".join(output)))
 
