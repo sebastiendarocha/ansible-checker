@@ -31,7 +31,7 @@ class TestAnsibleCheckYamlOutput(unittest.TestCase):
             pass
 
         with self.assertRaises(subprocess.CalledProcessError) as context:
-            subprocess.check_output('../ansible-checks.py',
+            subprocess.check_output('../ansible_checks.py',
                                     stderr=subprocess.STDOUT)
 
         self.assertTrue("returned non-zero exit status 1"
@@ -40,7 +40,7 @@ class TestAnsibleCheckYamlOutput(unittest.TestCase):
     def testErrorInventoryYaml(self):
 
         with self.assertRaises(subprocess.CalledProcessError) as context:
-            subprocess.check_output('../ansible-checks.py',
+            subprocess.check_output('../ansible_checks.py',
                                     stderr=subprocess.STDOUT)
 
         self.assertIn("returned non-zero exit status 2",
@@ -51,7 +51,7 @@ class TestAnsibleCheckYamlOutput(unittest.TestCase):
     def testErrorPlaybookYaml(self):
 
         with self.assertRaises(subprocess.CalledProcessError) as context:
-            subprocess.check_output('../ansible-checks.py',
+            subprocess.check_output('../ansible_checks.py',
                                     stderr=subprocess.STDOUT)
 
         self.assertIn("returned non-zero exit status 3",
@@ -61,28 +61,28 @@ class TestAnsibleCheckYamlOutput(unittest.TestCase):
 
     def testConfChangedPlaybookYaml(self):
 
-        output = subprocess.check_output('../ansible-checks.py',
+        output = subprocess.check_output('../ansible_checks.py',
                                          stderr=subprocess.STDOUT)
 
         self.assertEqual(self.expected_result, output.decode())
 
     def testConfSimplePlaybookYaml(self):
 
-        output = subprocess.check_output('../ansible-checks.py',
+        output = subprocess.check_output('../ansible_checks.py',
                                          stderr=subprocess.STDOUT)
 
         self.assertEqual(self.expected_result, output.decode())
 
     def testConfErrorPlaybookYaml(self):
 
-        output = subprocess.check_output('../ansible-checks.py',
+        output = subprocess.check_output('../ansible_checks.py',
                                          stderr=subprocess.STDOUT)
 
         self.assertEqual(self.expected_result, output.decode())
 
     def testConfTwoPlaybooksYaml(self):
 
-        output = subprocess.check_output('../ansible-checks.py',
+        output = subprocess.check_output('../ansible_checks.py',
                                          stderr=subprocess.STDOUT)
 
         self.assertEqual(self.expected_result, output.decode())

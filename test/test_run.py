@@ -21,7 +21,7 @@ class TestAnsibleCheckRun(unittest.TestCase):
             pass
 
         with self.assertRaises(subprocess.CalledProcessError) as context:
-            subprocess.check_output('../ansible-checks.py',
+            subprocess.check_output('../ansible_checks.py',
                                     stderr=subprocess.STDOUT)
 
         self.assertTrue("returned non-zero exit status 1"
@@ -30,7 +30,7 @@ class TestAnsibleCheckRun(unittest.TestCase):
     def testErrorInventory(self):
 
         with self.assertRaises(subprocess.CalledProcessError) as context:
-            subprocess.check_output('../ansible-checks.py',
+            subprocess.check_output('../ansible_checks.py',
                                     stderr=subprocess.STDOUT)
 
         self.assertIn("returned non-zero exit status 2",
@@ -41,7 +41,7 @@ class TestAnsibleCheckRun(unittest.TestCase):
     def testErrorPlaybook(self):
 
         with self.assertRaises(subprocess.CalledProcessError) as context:
-            subprocess.check_output('../ansible-checks.py',
+            subprocess.check_output('../ansible_checks.py',
                                     stderr=subprocess.STDOUT)
 
         self.assertIn("returned non-zero exit status 3",
@@ -51,7 +51,7 @@ class TestAnsibleCheckRun(unittest.TestCase):
 
     def testConfChandedPlaybook(self):
 
-        output = subprocess.check_output('../ansible-checks.py',
+        output = subprocess.check_output('../ansible_checks.py',
                                          stderr=subprocess.STDOUT)
 
         self.assertEqual("hosts : changed.yml\n"
@@ -60,14 +60,14 @@ class TestAnsibleCheckRun(unittest.TestCase):
 
     def testConfSimplePlaybook(self):
 
-        output = subprocess.check_output('../ansible-checks.py',
+        output = subprocess.check_output('../ansible_checks.py',
                                          stderr=subprocess.STDOUT)
 
         self.assertEqual("hosts : simple.yml\n", output.decode())
 
     def testConfErrorPlaybook(self):
 
-        output = subprocess.check_output('../ansible-checks.py',
+        output = subprocess.check_output('../ansible_checks.py',
                                          stderr=subprocess.STDOUT)
 
         self.assertEqual("hosts : error.yml\n"
@@ -76,7 +76,7 @@ class TestAnsibleCheckRun(unittest.TestCase):
 
     def testConfTwoPlaybooks(self):
 
-        output = subprocess.check_output('../ansible-checks.py',
+        output = subprocess.check_output('../ansible_checks.py',
                                          stderr=subprocess.STDOUT)
 
         self.assertEqual("hosts : allinone.yml\n"

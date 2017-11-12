@@ -15,7 +15,7 @@ class TestAnsibleCheckArgs(unittest.TestCase):
         utils.createConf(conf)
 
     def testNoArguments(self):
-        output = subprocess.check_output('../ansible-checks.py',
+        output = subprocess.check_output('../ansible_checks.py',
                                          stderr=subprocess.STDOUT)
 
         self.assertEqual("", output.decode())
@@ -23,7 +23,7 @@ class TestAnsibleCheckArgs(unittest.TestCase):
     def testHelpArguments(self):
         output = subprocess.check_output(
             [
-                '../ansible-checks.py',
+                '../ansible_checks.py',
                 '-h'
             ],
             stderr=subprocess.STDOUT)
@@ -34,7 +34,7 @@ class TestAnsibleCheckArgs(unittest.TestCase):
     def testLoglevelArguments(self):
         output = subprocess.check_output(
             [
-                '../ansible-checks.py',
+                '../ansible_checks.py',
                 '--log',
                 'DEBUG'
             ],
@@ -46,7 +46,7 @@ class TestAnsibleCheckArgs(unittest.TestCase):
         with self.assertRaises(subprocess.CalledProcessError) as context:
             subprocess.check_output(
                 [
-                    '../ansible-checks.py',
+                    '../ansible_checks.py',
                     '--log',
                     'DEBUGFAIL'
                 ],
